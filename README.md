@@ -118,20 +118,6 @@ Deploy your code:
     Compressing objects: 100% (80/80), done.
     Writing objects: 100% (110/110), 163.34 KiB, done.
     Total 110 (delta 17), reused 110 (delta 17)
-
-    -----> Heroku receiving push
-    -----> Fetching custom language pack... done
-    -----> Grails app detected
-    -----> Installing Grails 1.3.7..... done
-    -----> executing grails war
-           Welcome to Grails 1.3.7 - http://grails.org/
-           Licensed under Apache Standard License 2.0
-           Grails home is set to: /app/tmp/repo.git/.cache/.grails
-
-           Base Directory: /tmp/build_6xly6bokvaiv
-           Resolving dependencies...
-
-
     -----> Heroku receiving push
     -----> Fetching custom buildpack... done
     -----> Grails app detected
