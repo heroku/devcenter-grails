@@ -180,6 +180,10 @@ To run your app in the same configuration as Heroku, you must run a local Postgr
 
 ### Run Your App
 
+<div class="callout" markdown="1">
+Note: you can also run your app with foreman using `foreman start` if you specified a Procfile previously. [Read more about foreman and procfiles](http://devcenter.heroku.com/articles/procfile).
+</div>
+
 Build the war file:
 
     $ grails war
@@ -187,10 +191,6 @@ Build the war file:
 Execute jetty runner:
 
     $ java -jar server/jetty-runner.jar target/*.war
-
-<div class="callout" markdown="1">
-Note: you can also run your app with foreman using `foreman start` if you specified a Procfile previously. [Read more about foreman and procfiles](http://devcenter.heroku.com/articles/procfile).
-</div>
 
     2012-01-23 15:22:30.792:INFO:omjr.Runner:Runner
     2012-01-23 15:22:30.793:WARN:omjr.Runner:No tx manager found
