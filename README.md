@@ -1,8 +1,8 @@
-This guide will show you how to deploy a Grails application to Heroku and bind it to the free Postgres database service.
+This guide will show you how to deploy a Grails application to Heroku and bind it to the Postgres database service.
 
 ## Prerequisites
 
-* Java, Maven, Git, the Heroku client, and Foreman (as described in the [basic Java quickstart](/java))
+* Java, Maven, Git, and the Heroku client (as described in the [basic Java quickstart](/java))
 * An installed version of [Postgres](http://www.postgresql.org/) to test locally
 * An installed version of [Grails](http://grails.org/Installation) 1.3.7 or 2.0.0 (this guide assumes 2.0.0)
 
@@ -10,6 +10,7 @@ This guide will show you how to deploy a Grails application to Heroku and bind i
 
 If you don't already have a Grails app, you can create one quickly following the standard [Grails Quick Start](http://grails.org/Quick+Start) or clone this sample from github:
 
+    :::term
     $ git clone git://github.com/heroku/devcenter-grails.git
     
 ## Set up the database
@@ -22,6 +23,7 @@ You can also provision a larger database service yourself using the `heroku addo
 
 Configure your app to use this database by changing the `production` database configuration in `grails-app/conf/DataSource.groovy` to this:
 
+    :::groovy
     production {
         dataSource {
             dbCreate = "update"
@@ -40,6 +42,7 @@ Configure your app to use this database by changing the `production` database co
 
 Edit `grails-app/conf/BuildConfig.groovy` to add the postgres JDBC driver as a dependency and to enable Maven Central and the local Maven cache as repositories. Your `BuildConfig.groovy` should look like this:
 
+    :::groovy
     grails.project.class.dir = "target/classes"
     grails.project.test.class.dir = "target/test-classes"
     grails.project.test.reports.dir = "target/test-reports"
@@ -100,6 +103,7 @@ Create a `.gitignore` file [tailored for Grails](https://github.com/github/gitig
 
 Check your app into Git:
 
+    :::term
     $ git init
     $ git add .
     $ git commit -m init
@@ -108,10 +112,21 @@ Check your app into Git:
 
 Create the app on the Cedar stack
 
+    :::term
     $ heroku create --stack cedar
 
-Deploy your code:
+### Optional: Declare Process Types With Procfile
 
+You declare how you want your application executed in `Procfile` in the project root. Create this file with a single line:
+
+    :::term
+    web: java $JAVA_OPTS -jar server/jetty-runner.jar --port $PORT target/*.war
+
+Running Grails on the Cedar stack automatically generates the Procfile above. But you can take full control of how your app is executed by defining your own Procfile.
+
+## Deploy your code:
+
+    :::term
     $ git push heroku master
     Counting objects: 110, done.
     Delta compression using up to 4 threads.
@@ -146,7 +161,7 @@ Congratulations! Your Grails app is now up and running on Heroku. Open it in you
 
 ## Local testing
 
-Normally you run your Grails apps locally with `grails run-app`. This works great for quick, iterative development. But sometimes, it is useful to run the app in the same configuration as the server. 
+Normally you run your Grails apps locally with `grails run-app`. This works great for quick, iterative development, and is fine to use when developing for Heroku. However, it is often useful to run the app using the same configuration as the server. 
 
 ### Add an embedded server
 
@@ -157,54 +172,41 @@ As you might have noticed from the build output above. Heroku added Jetty as the
 
 You can put any server configuration in the server directory. For example, you can put a complete Tomcat distribution there.
 
-### Declare Process Types With Procfile
-
-You declare how you want your application executed in `Procfile` in the project root. Create this file with a single line:
-
-    :::term
-    web: java $JAVA_OPTS -jar server/jetty-runner.jar --port $PORT target/*.war
-
-When you deployed to Heroku before, this process type was declared by default. But you can take full control of how your app is executed by defining your own Procfile.
-
-You can now run your app locally using the same configuration as Heroku.
-
 ### Configure your local database URL
 
 To run your app in the same configuration as Heroku, you must run a local Postgres database. It's a common source of issues to use different databases in development and production. Set up a database on your Postgres instance and set the DATABASE_URL variable in your environment:
 
     $ export DATABASE_URL=postgres://user:pass@localhost/dbname
 
-### Run Your App with Foreman
+### Run Your App
 
-First build the war file:
+Build the war file:
 
     $ grails war
 
-Then run your app with Foreman:
+Execute jetty runner:
 
-    $ foreman start
-    17:10:59 web.1     | started with pid 37303
-    17:11:00 web.1     | 2011-09-08 17:11:00.207:INFO:omjr.Runner:Runner
-    17:11:00 web.1     | 2011-09-08 17:11:00.207:WARN:omjr.Runner:No tx manager found
-    17:11:00 web.1     | 2011-09-08 17:11:00.247:INFO:omjr.Runner:Deploying file:/Users/jjoergensen/dev/grails-sample/target/grails-sample-0.1.war @ /
-    17:11:00 web.1     | [o.e.j.w.WebAppContext{/,null},file:/Users/jjoergensen/dev/grails-sample/target/grails-sample-0.1.war]
-    17:11:00 web.1     | 2011-09-08 17:11:00.265:INFO:oejs.Server:jetty-7.x.y-SNAPSHOT
-    17:11:00 web.1     | 2011-09-08 17:11:00.300:INFO:oejw.WebInfConfiguration:Extract jar:file:/Users/jjoergensen/dev/grails-sample/target/grails-sample-0.1.war!/ to /private/var/folders/-G/-Gcbk9Y+FruX6u1ylpMsM+Ie7w+/-Tmp-/jetty-0.0.0.0-5000-grails-sample-0.1.war-_-any-/webapp
-    17:11:03 web.1     | 2011-09-08 17:11:03.122:INFO:oejpw.PlusConfiguration:No Transaction manager found - if your webapp requires one, please configure one.
-    17:11:04 web.1     | 2011-09-08 17:11:04.363:INFO:/:Initializing Spring root WebApplicationContext
-    17:11:11 web.1     | 2011-09-08 17:11:11.106:INFO:oejsh.ContextHandler:started o.e.j.w.WebAppContext{/,file:/private/var/folders/-G/-Gcbk9Y+FruX6u1ylpMsM+Ie7w+/-Tmp-/jetty-0.0.0.0-5000-grails-sample-0.1.war-_-any-/webapp/},file:/Users/jjoergensen/dev/grails-sample/target/grails-sample-0.1.war
-    17:11:11 web.1     | 2011-09-08 17:11:11.188:INFO:/:Initializing Spring FrameworkServlet 'grails'
-    17:11:11 web.1     | 2011-09-08 17:11:11.221:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:5000 STARTING
+    $ java -jar server/jetty-runner.jar target/*.war
 
-Your app is now up on <http://localhost:5000>.
+<div class="callout" markdown="1">
+Note: you can also run your app with foreman using `foreman start` if you specified a Procfile previously. [Read more about foreman and procfiles](http://devcenter.heroku.com/articles/procfile).
+</div>
 
-You can check in these changes and push them to Heroku:
+    2012-01-23 15:22:30.792:INFO:omjr.Runner:Runner
+    2012-01-23 15:22:30.793:WARN:omjr.Runner:No tx manager found
+    2012-01-23 15:22:30.820:INFO:omjr.Runner:Deploying file:/Users/test/dev/devcenter-grails/target/grails20Test-0.1.war @ /[o.e.j.w.WebAppContext{/,null},file:/Users/test/dev/devcenter-grails/target/grails20Test-0.1.war]
+    2012-01-23 15:22:30.836:INFO:oejs.Server:jetty-7.x.y-SNAPSHOT
+    2012-01-23 15:22:30.865:INFO:oejw.WebInfConfiguration:Extract jar:file:/Users/test/dev/devcenter-grails/target/grails20Test-0.1.war!/ to /private/var/folders/b2/wfscp_952tn6gd6dhssbr7q00000gn/T/jetty-0.0.0.0-8080-grails20Test-0.1.war-_-any-/webapp
+    2012-01-23 15:22:32.683:INFO:oejpw.PlusConfiguration:No Transaction manager found - if your webapp requires one, please configure one.
+    2012-01-23 15:22:33.478:INFO:/:Initializing Spring root WebApplicationContext
+    2012-01-23 15:22:37.780:INFO:oejsh.ContextHandler:started o.e.j.w.WebAppContext{/,file:/private/var/folders/b2/wfscp_952tn6gd6dhssbr7q00000gn/T/jetty-0.0.0.0-8080-grails20Test-0.1.war-_-any-/webapp/},file:/Users/test/dev/devcenter-grails/target/grails20Test-0.1.war
+    2012-01-23 15:22:37.849:INFO:/:Initializing Spring FrameworkServlet 'grails'
+    2012-01-23 15:22:37.870:INFO:oejs.AbstractConnector:Started SelectChannelConnector@0.0.0.0:8080 STARTING
 
-    $ git add .
-    $ git commit -m "added Procfile and jetty-runner"
-    $ git push heroku master
-    ...
+Your app is now up on <http://localhost:8080>.
 
 Of course you don't have to use Jetty at all. As you have seen, you are in full control of what web server you use for your app and how it is launched by Heroku. This gives you the benefit of being able to control your production runtime in detail and being able to run exactly the same configuration in development and production.
 
+## Grails Heroku plugin
 
+The [Grails Heroku plugin](http://grails.org/plugin/heroku) provides a set of simple commands to set up your Grails app with Heroku add-on services like [Postgres](https://addons.heroku.com/heroku-postgresql), [Memcached](https://addons.heroku.com/memcache), [Redis](https://addons.heroku.com/redistogo), MongoDB from [MongoLabs](https://addons.heroku.com/mongolab) or [MongoHQ](https://addons.heroku.com/mongohq) and [RabbitMQ](https://addons.heroku.com/rabbitmq).
