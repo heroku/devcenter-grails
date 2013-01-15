@@ -4,7 +4,7 @@ This guide will show you how to deploy a Grails application to Heroku and bind i
 
 * Java, Maven, Git, and the Heroku client (as described in the [basic Java quickstart](/java))
 * An installed version of [Postgres](http://www.postgresql.org/) to test locally
-* An installed version of [Grails](http://grails.org/Installation) 1.3.7 or 2.x (this guide assumes 2.1.1)
+* An installed version of [Grails](http://grails.org/Installation) 1.3.7 or 2.x (this guide assumes 2.2.0)
 
 ## Create a Grails app
 
@@ -136,12 +136,12 @@ Running Grails on the Cedar stack automatically generates the Procfile above. Bu
     -----> Heroku receiving push
     -----> Fetching custom buildpack... done
     -----> Grails app detected
-    -----> Grails 2.1.1 app detected
-    -----> Installing Grails 2.1.1.....
+    -----> Grails 2.2.0 app detected
+    -----> Installing Grails 2.2.0.....
     -----> Done
     -----> Executing grails -plain-output -Divy.default.ivy.user.dir=/app/tmp/repo.git/.cache war
        
-           |Loading Grails 2.1.1
+           |Loading Grails 2.2.0
            |Configuring classpath
            |Downloading: ivy-1.0.1.RELEASE.xml
            ...
