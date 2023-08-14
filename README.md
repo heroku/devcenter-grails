@@ -78,7 +78,7 @@ Check your app into Git:
 Create the app on the Cedar stack
 
     :::term
-    $ heroku create --stack cedar
+    $ heroku create
 
 ### Optional: Declare Process Types With Procfile
 
